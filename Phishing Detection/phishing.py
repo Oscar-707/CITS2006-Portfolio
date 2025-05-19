@@ -5,14 +5,14 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report
 from sklearn.preprocessing import LabelEncoder
 
-# ---------- Step 1: Load your dataset ----------
+#Load the dataset 
 csv_path = "phishing_site_urls.csv"  # Change this to your CSV file path
 df = pd.read_csv(csv_path)
 
-# Assuming your CSV columns are named 'URL' and 'Label'
+# Assuming the CSV columns are named 'URL' and 'Label'
 # If the columns are named differently, update accordingly.
 
-# Step 2: Feature Extraction
+# Feature Extraction
 def extract_features(url):
     features = {}
     features["url_length"] = len(url)
@@ -27,7 +27,7 @@ def extract_features(url):
 
 features_df = df["URL"].apply(extract_features).apply(pd.Series)
 
-# ---------- Step 3: Model Training ----------
+# Step 3: Model Training
 X = features_df
 le = LabelEncoder()
 y = le.fit_transform(df["Label"])
@@ -37,12 +37,12 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 clf = RandomForestClassifier(n_estimators=100, random_state=42)
 clf.fit(X_train, y_train)
 
-# ---------- Step 4: Evaluation ----------
+# Evaluation
 y_pred = clf.predict(X_test)
 print("\n=== Classification Report ===")
 print(classification_report(y_test, y_pred, target_names=le.classes_))
 
-# ---------- Step 5: Predict New URLs ----------
+# Predict New URLs
 def predict_url(url):
     feat = extract_features(url)
     feat_df = pd.DataFrame([feat])
